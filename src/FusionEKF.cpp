@@ -30,13 +30,33 @@ FusionEKF::FusionEKF() {
   R_radar_ << 0.09, 0, 0,
         0, 0.0009, 0,
         0, 0, 0.09;
+  
+  //measurement matrix - laser
+  H_laser << 1, 0, 0, 0,
+        0, 1, 0, 0;
+
+  //jacobian matrix - radar
+  Hj_ << 
 
   /**
-  TODO:
+  TO_DOING:
     * Finish initializing the FusionEKF.
     * Set the process and measurement noises
   */
+  //initial state transition
+  ekf_.F_ << 1, 0, 1, 0,
+        0, 1, 0, 1,
+        0, 0, 1, 0,
+        0, 0, 0, 1;
+  //state covariance matrix P
+  ekf_.P_ << 1, 0, 0, 0,
+        0, 1, 0, 0,
+        0, 0, 1000, 0,
+        0, 0, 0, 1000;
 
+  //set acceleration noise components
+  noise_ax = 9
+  nosie_ay = 9
 
 }
 
