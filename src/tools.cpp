@@ -69,10 +69,14 @@ MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
 
 	//check division by zero
 	if (px==0 && py==0) {
-		cout << "Divisions by Zero!" << endl;
-		return Hj;
+		//cout << "Divisions by Zero!" << endl;
+		//return Hj;
+
+		// avoid division by zero
+		px = 0.001;
+		py = 0.001;
 	};
-	
+
 	//compute the Jacobian matrix
 	Hj << px_div, py_div, 0, 0,
 		 -py / (px2+py2), px / (px2+py2), 0, 0,
