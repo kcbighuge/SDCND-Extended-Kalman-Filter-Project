@@ -36,7 +36,7 @@ FusionEKF::FusionEKF() {
         0, 1, 0, 0;
 
   //jacobian matrix - radar
-  Hj_ = CalculateJacobian(ekf_.x_);
+  Hj_ = tools.CalculateJacobian(ekf_.x_);
 
   /**
   TO_DID:
@@ -55,8 +55,8 @@ FusionEKF::FusionEKF() {
         0, 0, 0, 1000;
 
   //set acceleration noise components
-  noise_ax = 9;
-  nosie_ay = 9;
+  //float noise_ax = 9.0;
+  //float noise_ay = 9.0;
 
 }
 
@@ -76,7 +76,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
     TO_DID:
       * Initialize the state ekf_.x_ with the first measurement.
       * Create the covariance matrix.
-      * Remember: you'll need to convert radar from polar to cartesian coordinates.
+      * Remember: convert radar from polar to cartesian coordinates.
     */
     // first measurement
     cout << "EKF: " << endl;
@@ -87,15 +87,15 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
       /**
       Convert radar from polar to cartesian coordinates and initialize state.
       */
-      ekf_.x_(0) << measurement_pack.raw_measurements_(0)*cos(measurement_pack.raw_measurements_(1));
-      ekf_.x_(1) << measurement_pack.raw_measurements_(0)*sin(measurement_pack.raw_measurements_(1));
+      ekf_.x_(0) = measurement_pack.raw_measurements_[0]*cos(measurement_pack.raw_measurements_[1]);
+      ekf_.x_(1) = measurement_pack.raw_measurements_[0]*sin(measurement_pack.raw_measurements_[1]);
     }
     else if (measurement_pack.sensor_type_ == MeasurementPackage::LASER) {
       /**
       Initialize state.
       */
-      ekf_.x_(0) << measurement_pack.raw_measurements_(0);
-      ekf_.x_(1) << measurement_pack.raw_measurements_(1);
+      ekf_.x_(0) = measurement_pack.raw_measurements_[0];
+      ekf_.x_(1) = measurement_pack.raw_measurements_[1];
     }
 
     ekf_.F_ = MatrixXd(4, 4);
@@ -117,8 +117,11 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
      * Update the process noise covariance matrix.
      * Use noise_ax = 9 and noise_ay = 9 for your Q matrix.
    */
+  //set acceleration noise components
+  float noise_ax = 9;
+  float noise_ay = 9;
 
-  float dt = (measurement_pack.timestamp_ - previous_timestamp_) / 1000000.0 //in secs
+  float dt = (measurement_pack.timestamp_ - previous_timestamp_) / 1000000.0; //in secs
   previous_timestamp_ = measurement_pack.timestamp_;
 
   float dt_2 = dt   * dt;
@@ -130,8 +133,8 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
   ekf_.F_(1, 3) = dt;
 
   //Set the process covariance matrix Q
-  kf_.Q_ = MatrixXd(4,4);
-  kf_.Q_ << noise_ax * dt_4/4, 0, noise_ax * dt_3/2, 0,
+  ekf_.Q_ = MatrixXd(4,4);
+  ekf_.Q_ << noise_ax * dt_4/4, 0, noise_ax * dt_3/2, 0,
             0, noise_ay * dt_4/4, 0, noise_ay * dt_3/2,
             noise_ax * dt_3/2, 0, noise_ax * dt_2, 0,
             0, noise_ay * dt_3/2, 0, noise_ay * dt_2;
