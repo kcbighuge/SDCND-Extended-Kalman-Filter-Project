@@ -41,7 +41,8 @@ void KalmanFilter::Update(const VectorXd &z) {
 
   //new state
   x_ = x_ + (K * y);
-  MatrixXd I = MatrixXd::Identity(2, 2);
+  long x_size = x_.size();
+  MatrixXd I = MatrixXd::Identity(x_size, x_size);
   P_ = (I - (K * H_)) * P_;
 
   //KF Prediction step
@@ -83,7 +84,8 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
 
   //new state
   x_ = x_ + (K * y);
-  MatrixXd I = MatrixXd::Identity(4, 4);
+  long x_size = x_.size();
+  MatrixXd I = MatrixXd::Identity(x_size, x_size);
   P_ = (I - (K * H_)) * P_;
 
   //KF Prediction step
