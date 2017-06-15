@@ -65,7 +65,7 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   float vy = x_(3);
 
   //check if position values equal zero
-  if (px==0 && py==0) {
+  if (px<=0.00001 && py<=0.00001) {
     px = 0.001;
     py = 0.001;
   };

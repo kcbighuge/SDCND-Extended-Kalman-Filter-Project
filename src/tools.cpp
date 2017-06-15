@@ -22,12 +22,12 @@ VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
 	// * the estimation vector size should not be zero
 	// * the estimation vector size should equal ground truth vector size
 	if (estimations.size() == 0) {
-		cout << "Estimation vector size be zero!" << endl;
+		//cout << "Estimation vector size be zero!" << endl;
 		return rmse;
 	};
 
 	if (estimations.size() != ground_truth.size()) {
-		cout << "Estimation and ground truth vector sizes not sames!" << endl;
+		//cout << "Estimation and ground truth vector sizes not sames!" << endl;
 		return rmse;
 	};
 
@@ -68,7 +68,7 @@ MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
 	float py_div = py / pow(px2+py2, 0.5);
 
 	//check division by zero
-	if (px==0 && py==0) {
+	if (px<=0.00001 && py<=0.00001) {
 		//cout << "Divisions by Zero!" << endl;
 		//return Hj;
 
