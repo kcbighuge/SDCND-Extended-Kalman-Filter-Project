@@ -68,13 +68,10 @@ MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
 	float py_div = py / pow(px2+py2, 0.5);
 
 	//check division by zero
-	if (px<=0.00001 && py<=0.00001) {
-		//cout << "Divisions by Zero!" << endl;
-		//return Hj;
-
-		// avoid division by zero
-		px = 0.001;
-		py = 0.001;
+	float zero_check = 0.00001;
+	if (fabs(px)<0.00001 && fabs(py)<0.00001) {
+		px = zero_check;
+		py = zero_check;
 	};
 
 	//compute the Jacobian matrix

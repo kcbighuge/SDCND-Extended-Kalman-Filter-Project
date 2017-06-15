@@ -65,9 +65,10 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   float vy = x_(3);
 
   //check if position values equal zero
-  if (px<=0.00001 && py<=0.00001) {
-    px = 0.001;
-    py = 0.001;
+  float zero_check = 0.00001;
+  if (fabs(px)<0.00001 && fabs(py)<0.00001) {
+    px = zero_check;
+    py = zero_check;
   };
 
   float ro = sqrt(px*px + py*py);
@@ -79,10 +80,10 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   VectorXd y = z - z_pred;
 
   // check if angle phi in y vector is between -pi and pi
-  if (y(1) > M_PI) {
+  while (y(1) > M_PI) {
     y(1) -= 2*M_PI;
   }
-  if (y(1) < M_PI) {
+  while (y(1) < -M_PI) {
     y(1) += 2*M_PI;
   }
 
